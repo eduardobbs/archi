@@ -9,6 +9,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationAdapter;
+import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -21,7 +23,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 /**
- * An Eclipse Editor containing a Browser component
+ * An EditorPart containing a Browser component
  * 
  * @author Phillip Beauvoir
  */
@@ -35,8 +37,8 @@ public class BrowserEditor extends EditorPart implements IBrowserEditor {
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-        if(!(input instanceof BrowserEditorInput)) {
-            throw new IllegalArgumentException("Editor Input has to be type BrowserEditorInput"); //$NON-NLS-1$
+        if(!(input instanceof IBrowserEditorInput)) {
+            throw new IllegalArgumentException("Editor Input has to be type IBrowserEditorInput"); //$NON-NLS-1$
         }
 
         setSite(site);
@@ -61,14 +63,19 @@ public class BrowserEditor extends EditorPart implements IBrowserEditor {
             return;
         }
         
-        BrowserEditorInput input = (BrowserEditorInput)getEditorInput();
+        IBrowserEditorInput input = getEditorInput();
         
         // Set URL
-        if(input.getURL() != null) {
+        if(getEditorInput().getURL() != null) {
             fBrowser.setUrl(input.getURL());
         }
         
         setPartName(input.getName());
+    }
+    
+    @Override
+    public IBrowserEditorInput getEditorInput() {
+        return (IBrowserEditorInput)super.getEditorInput();
     }
     
     /**
@@ -79,6 +86,22 @@ public class BrowserEditor extends EditorPart implements IBrowserEditor {
         try {
             browser = new Browser(parent, SWT.NONE);
             browser.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+            
+            // Enable JS
+            browser.setJavascriptEnabled(getEditorInput().getJavascriptEnabled());
+            
+            // Don't allow external links if set in Preferences
+            if(!getEditorInput().getExternalLinksEnabled()) {
+                browser.addLocationListener(new LocationAdapter() {
+                    @Override
+                    public void changing(LocationEvent e) {
+                        e.doit = e.location != null &&
+                                (e.location.startsWith("file:") //$NON-NLS-1$
+                                || e.location.startsWith("data:") //$NON-NLS-1$
+                                || e.location.startsWith("about:")); //$NON-NLS-1$
+                    }
+                });
+            }
         }
         catch(SWTError error) {
             error.printStackTrace();
@@ -93,12 +116,12 @@ public class BrowserEditor extends EditorPart implements IBrowserEditor {
     }
     
     @Override
-    public void setBrowserEditorInput(BrowserEditorInput input) {
+    public void setBrowserEditorInput(IBrowserEditorInput input) {
         setInput(input);
         
         setPartName(input.getName());
         
-        if(input.getURL() != null) {
+        if(fBrowser != null && input.getURL() != null) {
             fBrowser.setUrl(input.getURL());
         }
     }
@@ -134,10 +157,5 @@ public class BrowserEditor extends EditorPart implements IBrowserEditor {
     @Override
     public boolean isSaveAsAllowed() {
         return false;
-    }
-    
-    @Override
-    public void dispose() {
-        super.dispose();
     }
 }

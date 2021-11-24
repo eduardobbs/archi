@@ -47,6 +47,12 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     
     private Button fUseEdgeBrowserButton;
     
+    private Button fEnableJSInternalBrowserButton;
+    private Button fEnableExternalLinksInternalBrowserButton;
+    
+    private Button fEnableJSHintsButton;
+    private Button fEnableExternalLinksHintsButton;
+
     private Button fUseLabelExpressionsButton;
     
     private Button fDoAnimationViewButton;
@@ -136,16 +142,45 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         label.setText(Messages.GeneralPreferencePage_14);
         label.setLayoutData(createHorizontalGridData(2));
         
+        // Internal Browser
+        Group browserGroup = new Group(client, SWT.NULL);
+        browserGroup.setText(Messages.GeneralPreferencePage_19);
+        browserGroup.setLayout(new GridLayout(2, false));
+        browserGroup.setLayoutData(createHorizontalGridData(1));
+        
         // Edge Browser on Windows
         if(PlatformUtils.isWindows()) {
-            fUseEdgeBrowserButton = new Button(otherGroup, SWT.CHECK);
+            fUseEdgeBrowserButton = new Button(browserGroup, SWT.CHECK);
             fUseEdgeBrowserButton.setText(Messages.GeneralPreferencePage_15);
             fUseEdgeBrowserButton.setLayoutData(createHorizontalGridData(2));
-            label = new Label(otherGroup, SWT.NULL);
-            label.setText(Messages.GeneralPreferencePage_19);
-            label.setLayoutData(createHorizontalGridData(2));
         }
         
+        Group browserGroup2 = new Group(browserGroup, SWT.NULL);
+        browserGroup2.setText(Messages.GeneralPreferencePage_20);
+        browserGroup2.setLayout(new GridLayout(1, false));
+        browserGroup2.setLayoutData(createHorizontalGridData(1));
+
+        fEnableJSInternalBrowserButton = new Button(browserGroup2, SWT.CHECK);
+        fEnableJSInternalBrowserButton.setText(Messages.GeneralPreferencePage_21);
+        fEnableJSInternalBrowserButton.setLayoutData(createHorizontalGridData(1));
+        
+        fEnableExternalLinksInternalBrowserButton = new Button(browserGroup2, SWT.CHECK);
+        fEnableExternalLinksInternalBrowserButton.setText(Messages.GeneralPreferencePage_22);
+        fEnableExternalLinksInternalBrowserButton.setLayoutData(createHorizontalGridData(1));
+        
+        Group browserGroup3 = new Group(browserGroup, SWT.NULL);
+        browserGroup3.setText(Messages.GeneralPreferencePage_23);
+        browserGroup3.setLayout(new GridLayout(1, false));
+        browserGroup3.setLayoutData(createHorizontalGridData(1));
+
+        fEnableJSHintsButton = new Button(browserGroup3, SWT.CHECK);
+        fEnableJSHintsButton.setText(Messages.GeneralPreferencePage_21);
+        fEnableJSHintsButton.setLayoutData(createHorizontalGridData(1));
+        
+        fEnableExternalLinksHintsButton = new Button(browserGroup3, SWT.CHECK);
+        fEnableExternalLinksHintsButton.setText(Messages.GeneralPreferencePage_22);
+        fEnableExternalLinksHintsButton.setLayoutData(createHorizontalGridData(1));
+
         // -------------- Animation ----------------------------
         
         if(AnimationUtil.supportsAnimation()) {
@@ -203,6 +238,12 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
             fUseEdgeBrowserButton.setSelection(getPreferenceStore().getBoolean(EDGE_BROWSER));
         }
         
+        fEnableJSInternalBrowserButton.setSelection(getPreferenceStore().getBoolean(INTERNAL_BROWSER_JS_ENABLED));
+        fEnableExternalLinksInternalBrowserButton.setSelection(getPreferenceStore().getBoolean(INTERNAL_BROWSER_EXTERNAL_LINKS_ENABLED));
+        
+        fEnableJSHintsButton.setSelection(getPreferenceStore().getBoolean(HINTS_BROWSER_JS_ENABLED));
+        fEnableExternalLinksHintsButton.setSelection(getPreferenceStore().getBoolean(HINTS_BROWSER_EXTERNAL_LINKS_ENABLED));
+
         if(AnimationUtil.supportsAnimation()) {
             fDoAnimationViewButton.setSelection(getPreferenceStore().getBoolean(ANIMATE_VIEW));
             fAnimationViewTimeSpinner.setSelection(getPreferenceStore().getInt(ANIMATION_VIEW_TIME));
@@ -228,6 +269,12 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
             getPreferenceStore().setValue(EDGE_BROWSER, fUseEdgeBrowserButton.getSelection());
         }
         
+        getPreferenceStore().setValue(INTERNAL_BROWSER_JS_ENABLED, fEnableJSInternalBrowserButton.getSelection());
+        getPreferenceStore().setValue(INTERNAL_BROWSER_EXTERNAL_LINKS_ENABLED, fEnableExternalLinksInternalBrowserButton.getSelection());
+        
+        getPreferenceStore().setValue(HINTS_BROWSER_JS_ENABLED, fEnableJSHintsButton.getSelection());
+        getPreferenceStore().setValue(HINTS_BROWSER_EXTERNAL_LINKS_ENABLED, fEnableExternalLinksHintsButton.getSelection());
+
         if(AnimationUtil.supportsAnimation()) {
             getPreferenceStore().setValue(ANIMATE_VIEW, fDoAnimationViewButton.getSelection());
             getPreferenceStore().setValue(ANIMATION_VIEW_TIME, fAnimationViewTimeSpinner.getSelection());
@@ -255,6 +302,12 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
             fUseEdgeBrowserButton.setSelection(getPreferenceStore().getDefaultBoolean(EDGE_BROWSER));
         }
         
+        fEnableJSInternalBrowserButton.setSelection(getPreferenceStore().getDefaultBoolean(INTERNAL_BROWSER_JS_ENABLED));
+        fEnableExternalLinksInternalBrowserButton.setSelection(getPreferenceStore().getDefaultBoolean(INTERNAL_BROWSER_EXTERNAL_LINKS_ENABLED));
+        
+        fEnableJSHintsButton.setSelection(getPreferenceStore().getDefaultBoolean(HINTS_BROWSER_JS_ENABLED));
+        fEnableExternalLinksHintsButton.setSelection(getPreferenceStore().getDefaultBoolean(HINTS_BROWSER_EXTERNAL_LINKS_ENABLED));
+
         if(AnimationUtil.supportsAnimation()) {
             fDoAnimationViewButton.setSelection(getPreferenceStore().getDefaultBoolean(ANIMATE_VIEW));
             fAnimationViewTimeSpinner.setSelection(getPreferenceStore().getDefaultInt(ANIMATION_VIEW_TIME));

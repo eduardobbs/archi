@@ -132,6 +132,12 @@ public interface IPreferenceConstants {
     String ANIMATE_VISUALISER_TIME = "animationVisualiserTime";
     
     String EDGE_BROWSER = "edgeBrowser";
+    
+    String INTERNAL_BROWSER_JS_ENABLED = "browserJSEnabled";
+    String INTERNAL_BROWSER_EXTERNAL_LINKS_ENABLED = "browserExternalLinksEnabled";
+
+    String HINTS_BROWSER_JS_ENABLED = "hintsJSEnabled";
+    String HINTS_BROWSER_EXTERNAL_LINKS_ENABLED = "hintsExternalLinksEnabled";
 
     // ======================================= Internal =======================================
     

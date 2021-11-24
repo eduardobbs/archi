@@ -33,6 +33,26 @@ public interface IBrowserEditorInput extends IEditorInput, IPersistableElement {
     void setPersistBrowser(boolean value);
     
     /**
+     * @param value If true JS is enabled in the internal browser
+     */
+    void setJavascriptEnabled(boolean value);
+    
+    /**
+     * @return Whether JS is enabled
+     */
+    boolean getJavascriptEnabled();
+    
+    /**
+     * @param value If true external links are enabled in the internal browser
+     */
+    void setExternalLinksEnabled(boolean value);
+    
+    /**
+     * @return Whether external links are enabled
+     */
+    boolean getExternalLinksEnabled();
+    
+    /**
      * This is deprecated use setPersistBrowser API instead
      */
     @Deprecated
